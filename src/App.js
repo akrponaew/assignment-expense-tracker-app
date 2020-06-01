@@ -1,14 +1,14 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import Topbar from './components/Topbar';
-import Main from './components/Main';
+import Layout from './components/Layout';
+import ExpenseList from './components/content/ExpenseList';
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path='/' component={Main} />
-        <Route path='/topbar' component={Topbar} />
+        <Route exact path='/' component={Layout} />
+        <Route exact path='/expense' component={ExpenseList} />
       </Switch>
     </BrowserRouter>
   );
