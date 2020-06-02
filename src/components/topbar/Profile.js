@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { red } from '@material-ui/core/colors'
 import Popper from '@material-ui/core/Popper'
 import IconButton from '@material-ui/core/IconButton'
@@ -20,26 +20,36 @@ const useStyles = makeStyles({
 export default function Profile() {
     const classes = useStyles()
     const [open, setOpen] = useState(false)
-    const [anchorEl, setAnchorEl] = useState(null);
+    const anchorRef = useRef(null);
 
-    const handleToggle = (e) => {
-        setAnchorEl(anchorEl ? null : e.currentTarget);
+    const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
-    }
+    };
+
+    const handleClose = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     return (
         <div>
-            <IconButton color="inherit" onClick={handleToggle}>
+            <IconButton
+                color="inherit"
+                ref={anchorRef}
+                onClick={handleToggle}>
                 <Avatar className={classes.red}>A</Avatar>
             </IconButton>
-            <Popper open={open} anchorEl={anchorEl} role={undefined} transition disablePortal>
+            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (
                     <Grow
                         {...TransitionProps}
                         style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
                     >
                         <Paper>
-                            <ClickAwayListener >
+                            <ClickAwayListener onClickAway={handleClose} >
                                 <MenuList autoFocusItem={open} >
                                     <MenuItem>Logout</MenuItem>
                                 </MenuList>

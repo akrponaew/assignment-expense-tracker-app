@@ -21,24 +21,17 @@ import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-function createData(categories, detail, amount) {
-    return { categories, detail, amount };
-}
-
 const rows = [
-    createData('Food & Drink','Cupcake', 3.7),
-    createData('Clothes','Donut', 25.0),
-    createData('Shoppings','Eclair', 16.0),
-    createData('Food & Drink','Frozen yoghurt', 6.0),
-    createData('Sports','Gingerbread', 16.0),
-    createData('Travel','Honeycomb', 3.2),
-    createData('Sports','Ice cream sandwich', 9.0),
-    createData('Sports','Jelly Bean', 0.0),
-    createData('Clothes','KitKat', 26.0),
-    createData('Clothes','Lollipop', 0.2),
-    createData('Food & Drink','Marshmallow', 0),
-    createData('Shoppings','Nougat', 19.0),
-    createData('Food & Drink','Oreo', 18.0),
+    { id : 0,categories : 'Travel', detail : 'Cupcake', amount : 2},
+    { id : 1,categories : 'Food & Drink', detail : 'Donut', amount : 4},
+    { id : 2,categories : 'Clothes', detail : 'Lollipop', amount : 3.7},
+    { id : 3,categories : 'Food & Drink', detail : 'Oreo', amount : 1.6},
+    { id : 4,categories : 'Clothes', detail : 'Marshmallow', amount : 8},
+    { id : 5,categories : 'Food & Drink', detail : 'Nougat', amount : 9},
+    { id : 6,categories : 'Travel', detail : 'KitKat', amount : 2.5},
+    { id : 7,categories : 'Sports', detail : 'Gingerbread', amount : 8.1},
+    { id : 8,categories : 'Sports', detail : 'Eclair', amount : 3.3},
+    { id : 9,categories : 'Food & Drink', detail : 'Honeycomb', amount : 5}
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -228,19 +221,19 @@ export default function ExpenseList() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelecteds = rows.map((n) => n.name);
+            const newSelecteds = rows.map((n) => n.id);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -297,17 +290,17 @@ export default function ExpenseList() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
+                                    const isItemSelected = isSelected(row.id);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.name)}
+                                            onClick={(event) => handleClick(event, row.id)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            // key={row.name}
+                                            key={row.id}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
