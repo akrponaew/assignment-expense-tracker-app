@@ -293,6 +293,7 @@ export default function ExpenseList() {
                             rowCount={rows.length}
                         />
                         <TableBody>
+                            //change to rows.map 
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
