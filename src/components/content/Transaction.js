@@ -24,6 +24,12 @@ const useStyles = makeStyles({
         backgroundColor: blue[100],
         color: blue[600],
     },
+    form : {
+        margin: '30px 50px'
+    },
+    formControl : {
+        marginBottom: '30px'
+    }
 });
 
 function SimpleDialog(props) {
@@ -42,7 +48,14 @@ function SimpleDialog(props) {
         <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} >
             <DialogTitle id="simple-dialog-title">Add Transaction</DialogTitle>
             <Divider />
-            hello
+            <form noValidate autoComplete="off" className={classes.form}>
+                <Categories className={classes.formControl} />
+                <TextField className={classes.formControl} label="Detail" multiline={true} fullWidth={true} />
+                <TextField className={classes.formControl} label="Amount" type='number' fullWidth={true} />
+                <Button variant="contained" color="primary" fullWidth={true}>
+                    ADD
+                </Button>
+            </form>
             {/* <List>
                 <ListItem>
                     <Grid container>

@@ -106,7 +106,7 @@ export default function Layout() {
     return (
         <div className={classes.root}>
             <CssBaseline />
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBar)}>
                 <Toolbar className={classes.toolbar}>
                     <IconButton
                         edge="start"
@@ -124,7 +124,7 @@ export default function Layout() {
                     <Profile />
                 </Toolbar>
             </AppBar>
-            <Drawer
+            {/* <Drawer
                 variant="permanent"
                 classes={{
                     paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
@@ -138,7 +138,7 @@ export default function Layout() {
                 </div>
                 <Divider />
                 <List></List>
-            </Drawer>
+            </Drawer> */}
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>

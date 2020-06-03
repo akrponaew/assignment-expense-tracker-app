@@ -33,9 +33,12 @@ const useStyles = makeStyles((theme) => ({
             width: '25ch',
         },
     },
+    formControl: {
+        marginBottom: '100px'
+    }
 }));
 
-export default function Categories() {
+export default function Categories(props) {
     const classes = useStyles();
     const [categorie, setCategorie] = useState('fooranddrink');
 
@@ -44,22 +47,19 @@ export default function Categories() {
     };
 
     return (
-        <form className={classes.root} noValidate autoComplete="off">
-            <div>
-                <TextField
-                    select
-                    label="categories"
-                    value={categorie}
-                    onChange={handleChange}
-                    fullWidth={true}
-                >
-                    {categories.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </div>
-        </form>
+        <TextField
+            select
+            label="categories"
+            value={categorie}
+            onChange={handleChange}
+            fullWidth={true}
+            className={props.className}
+        >
+            {categories.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                </MenuItem>
+            ))}
+        </TextField>
     );
 }
