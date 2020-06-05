@@ -1,192 +1,99 @@
-import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import PersonIcon from '@material-ui/icons/Person';
-import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
-import { blue } from '@material-ui/core/colors';
-import IconButton from '@material-ui/core/IconButton'
-import TextField from '@material-ui/core/TextField'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
-import { Divider, Grid } from '@material-ui/core';
-import Categories from './Categories';
+import React, { useState, useEffect } from 'react'
+import MUIDataTable from "mui-datatables";
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
-    avatar: {
-        backgroundColor: blue[100],
-        color: blue[600],
+const columns = [
+    {
+        name: "date",
+        label: "Date",
+        options: {
+            filter: true,
+            sort: true,
+        }
     },
-    form : {
-        margin: '30px 50px'
+    {
+        name: "categories",
+        label: "Categories",
+        options: {
+            filter: true,
+            sort: true,
+        }
     },
-    formControl : {
-        marginBottom: '30px'
-    }
-});
+    {
+        name: "detail",
+        label: "Deatail",
+        options: {
+            filter: true,
+            sort: false,
+        }
+    },
+    {
+        name: "amount",
+        label: "Amount",
+        options: {
+            filter: true,
+            sort: false,
+        }
+    },
+];
 
-function SimpleDialog(props) {
-    const classes = useStyles();
-    const { onClose, selectedValue, open } = props;
+const dataList = [
+    { id: 0, date: '2020-04-01', categories: 'Travel', detail: 'Cupcake', amount: 2 },
+    { id: 1, date: '2020-04-02', categories: 'Food & Drink', detail: 'Donut', amount: 4 },
+    { id: 2, date: '2020-04-03', categories: 'Clothes', detail: 'Lollipop', amount: 3.7 },
+    { id: 3, date: '2020-05-10', categories: 'Food & Drink', detail: 'Oreo', amount: 1.6 },
+    { id: 4, date: '2020-05-13', categories: 'Clothes', detail: 'Marshmallow', amount: 8 },
+    { id: 5, date: '2020-05-15', categories: 'Food & Drink', detail: 'Nougat', amount: 9 },
+    { id: 6, date: '2020-05-17', categories: 'Travel', detail: 'KitKat', amount: 2.5 },
+    { id: 7, date: '2020-06-01', categories: 'Sports', detail: 'Gingerbread', amount: 8.1 },
+    { id: 8, date: '2020-06-03', categories: 'Sports', detail: 'Eclair', amount: 3.3 },
+    { id: 9, date: '2020-06-20', categories: 'Food & Drink', detail: 'Honeycomb', amount: 5 }
+];
 
-    const handleClose = () => {
-        onClose(selectedValue);
-    };
-
-    const handleListItemClick = (value) => {
-        onClose(value);
-    };
-
-    return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} >
-            <DialogTitle id="simple-dialog-title">Add Transaction</DialogTitle>
-            <Divider />
-            <form noValidate autoComplete="off" className={classes.form}>
-                <Categories className={classes.formControl} />
-                <TextField className={classes.formControl} label="Detail" multiline={true} fullWidth={true} />
-                <TextField className={classes.formControl} label="Amount" type='number' fullWidth={true} />
-                <Button variant="contained" color="primary" fullWidth={true}>
-                    ADD
-                </Button>
-            </form>
-            {/* <List>
-                <ListItem>
-                    <Grid container>
-                        <Grid item xs={3}>
-                            <Categories />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField label="Detail" multiline={true} fullWidth={true} />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField label="Amount" type='number' fullWidth={true} />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Button variant="contained" color="primary" fullWidth={true}>
-                                ADD
-                        </Button>
-                        </Grid>
-                    </Grid>
-
-                </ListItem>
-            </List> */}
-        </Dialog>
-    );
-}
-
-SimpleDialog.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
+const options = {
+    download: false,
+    print: false,
+    pagination: false
+    // filterType: 'checkbox',
 };
 
-export default function Transaction() {
-    const [open, setOpen] = useState(false);
-    const anchorRef = useRef(null);
+const getMuiTheme = createMuiTheme({
+    overrides: {
+        MuiTableCell: {
+            root: {
+                // backgroundColor: "#FF0000"
+                borderBottom: '0px solid rgba(224, 224, 224, 1)'
+            }
+        },
+        MUIDataTableBodyCell: {
+            cellStackedSmall : {
+                width: '50px',
+                // paddingBottom : '25px'
+            }
+        }
+    }
+})
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+export default function Transaction(props) {
+    const [data, setData] = useState([])
 
-    const handleClose = (value) => {
-        setOpen(false)
-    };
+    useEffect(() => {
+        const date = props.selectedDate
+
+        const filterDataByDate = dataList.filter(x =>
+            new Date(x.date).getMonth() == date.getMonth()
+        )
+        setData(filterDataByDate)
+    }, [props.selectedDate])
 
     return (
-        <div>
-            {/* <Typography variant="subtitle1">Selected: {selectedValue}</Typography>
-            <br />
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                Open simple dialog
-      </Button>*/}
-            <SimpleDialog open={open} onClose={handleClose} />
-            <IconButton
-                aria-label="add transaction"
-                ref={anchorRef}
-                onClick={handleClickOpen}
-            >
-                <AddCircleIcon color='secondary' fontSize='large' />
-            </IconButton>
-        </div>
-    );
+        <MuiThemeProvider theme={getMuiTheme}>
+            <MUIDataTable
+                title={"Expense List"}
+                data={data}
+                columns={columns}
+                options={options}
+            />
+        </MuiThemeProvider>
+    )
 }
-
-
-// import React, { useState, useRef } from 'react'
-// import IconButton from '@material-ui/core/IconButton'
-// import Popper from '@material-ui/core/Popper'
-// import Paper from '@material-ui/core/Paper'
-// import Card from '@material-ui/core/Card'
-// import Grow from '@material-ui/core/Grow'
-// import {makeStyles, Grid} from '@material-ui/core'
-// import AddCircleIcon from '@material-ui/icons/AddCircle'
-// import { TextField, ClickAwayListener } from '@material-ui/core'
-// import zIndex from '@material-ui/core/styles/zIndex'
-
-// const useStyles = makeStyles({
-//     form : {
-//         padding : '50px',
-//         zIndex: 999
-//     }
-// })
-
-// export default function Transaction() {
-//     const classes = useStyles()
-//     const [open, setOpen] = useState(false)
-//     const anchorRef = useRef(null);
-
-//     const handleToggle = () => {
-//         setOpen((prevOpen) => !prevOpen);
-//     };
-
-//     const handleClose = (event) => {
-//         if (anchorRef.current && anchorRef.current.contains(event.target)) {
-//             return;
-//         }
-
-//         setOpen(false);
-//     };
-
-//     return (
-//         <div>
-//             <IconButton
-//                 aria-label="add transaction"
-//                 ref={anchorRef}
-//                 onClick={handleToggle}
-//             >
-//                 <AddCircleIcon color='secondary' fontSize='large' />
-//             </IconButton>
-
-//             <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal >
-//                 {({ TransitionProps, placement }) => (
-//                     <Grow
-//                         {...TransitionProps}
-//                         style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-//                     >
-//                         <Card>
-//                             <ClickAwayListener onClickAway={handleClose}>
-//                                 <Grid container spacing={3}>
-//                                     <Grid item sm={12}>
-//                                         Hello
-//                                     </Grid>
-//                                     <Grid item sm={12}>
-//                                         Hello
-//                                     </Grid>
-//                                     <Grid item sm={12}>
-//                                         Hello
-//                                     </Grid>
-//                                 </Grid>
-//                             </ClickAwayListener>
-//                         </Card>
-//                     </Grow>
-//                 )}
-//             </Popper>
-//         </div>
-//     )
-// }

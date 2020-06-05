@@ -5,27 +5,38 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
-import ExpenseList from './ExpenseList';
-import Transaction from './Transaction'
-import ListExpense from './ListExpense';
+import AddTransaction from './AddTransaction'
+import Transaction from './Transaction';
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
+import Overview from './Overview';
 
 const useStyles = makeStyles({
-
+    hide : {
+        display: 'none'
+    }
 });
 
 export default function Content() {
     const classes = useStyles()
     const [selectedDate, setSelectedDate] = useState(new Date())
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(0)
 
-    const handleChange = (event, newValue) => {
+    const handleTabChange = (event, newValue) => {
         setValue(newValue);
+
+        if (newValue) {
+            document.getElementById('divTransaction').classList.add(classes.hide)
+            document.getElementById('divOverview').classList.remove(classes.hide)
+        }
+        else {
+            document.getElementById('divTransaction').classList.remove(classes.hide)
+            document.getElementById('divOverview').classList.add(classes.hide)
+        }
     };
 
     const handleDateChange = (date) => {
-        setSelectedDate(date);
+        setSelectedDate(date._d);
     };
 
     return (
@@ -34,27 +45,27 @@ export default function Content() {
                 avatar={
                     <MuiPickersUtilsProvider utils={MomentUtils}>
                         <KeyboardDatePicker
-                            disableToolbar
                             variant="inline"
-                            format="DD/MM/yyyy"
                             margin="normal"
                             value={selectedDate}
                             onChange={handleDateChange}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
+                            views={['year', 'month']}
+                            autoOk={true}
                         />
                     </MuiPickersUtilsProvider>
                 }
                 action={
-                    <Transaction />
+                    <AddTransaction />
                 }
             />
             <CardHeader
                 subheader={
                     <Tabs
                         value={value}
-                        onChange={handleChange}
+                        onChange={handleTabChange}
                         indicatorColor="primary"
                         textColor="primary"
                         centered
@@ -67,8 +78,12 @@ export default function Content() {
 
             </CardHeader>
             <CardContent>
-                {/* <ExpenseList /> */}
-                <ListExpense />
+                <div id='divTransaction'>
+                    <Transaction selectedDate={selectedDate} />
+                </div>
+                <div id='divOverview' className={classes.hide}>
+                    <Overview selectedDate={selectedDate} />
+                </div>
             </CardContent>
         </Card>
     )
