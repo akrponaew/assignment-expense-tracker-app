@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { red } from '@material-ui/core/colors'
 import Popper from '@material-ui/core/Popper'
 import IconButton from '@material-ui/core/IconButton'
@@ -9,6 +9,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import { makeStyles } from '@material-ui/core'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
+import { useHistory } from 'react-router-dom'
+import _ from 'lodash'
 
 const useStyles = makeStyles({
     red: {
@@ -17,10 +19,17 @@ const useStyles = makeStyles({
     }
 })
 
-export default function Profile() {
+export default function Profile(props) {
+    const history = useHistory()
     const classes = useStyles()
+    const [profile, setProfile] = useState({})
     const [open, setOpen] = useState(false)
     const anchorRef = useRef(null);
+
+    useEffect(() => {
+        setProfile(props.profile)
+        
+    }, [props.profile])
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -34,13 +43,17 @@ export default function Profile() {
         setOpen(false);
     };
 
+    const handleClick = () => {
+        history.push('/')
+    }
+
     return (
         <div>
             <IconButton
                 color="inherit"
                 ref={anchorRef}
                 onClick={handleToggle}>
-                <Avatar className={classes.red}>A</Avatar>
+                <Avatar className={classes.red}>{profile.name ? profile.name.substring(0,1) : ''}</Avatar>
             </IconButton>
             <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (
@@ -51,7 +64,12 @@ export default function Profile() {
                         <Paper>
                             <ClickAwayListener onClickAway={handleClose} >
                                 <MenuList autoFocusItem={open} >
-                                    <MenuItem>Logout</MenuItem>
+                                    <MenuItem disabled={true}>
+                                        {profile.name} {profile.lastname}
+                                    </MenuItem>
+                                    <MenuItem onClick={handleClick}>
+                                        Logout
+                                    </MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>
