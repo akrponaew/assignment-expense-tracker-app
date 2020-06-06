@@ -66,7 +66,7 @@ export default function SignIn() {
 
         axios.get(url)
             .then(res => {
-                const isUser = Array.from(res.data).filter(x => x.username == username && x.password == password)
+                const isUser = Array.from(res.data).filter(x => x.username == username && x.password == password && x.status == 'A')
                 isUser.length ? history.push('/main', { userData: isUser })
                     : document.getElementById('alertUsernamePassword').classList.remove(classes.hide)
             })

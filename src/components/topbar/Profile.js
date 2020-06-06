@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar'
 import Grow from '@material-ui/core/Grow'
 import Paper from '@material-ui/core/Paper'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Divider } from '@material-ui/core'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
 import { useHistory } from 'react-router-dom'
@@ -16,6 +16,10 @@ const useStyles = makeStyles({
     red: {
         color: '#fff',
         backgroundColor: red[500],
+    },
+
+    textcenter : {
+        justifyContent: 'center',
     }
 })
 
@@ -55,7 +59,7 @@ export default function Profile(props) {
                 onClick={handleToggle}>
                 <Avatar className={classes.red}>{profile.name ? profile.name.substring(0,1) : ''}</Avatar>
             </IconButton>
-            <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+            <Popper open={open} anchorEl={anchorRef.current} placement='bottom-end' role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (
                     <Grow
                         {...TransitionProps}
@@ -67,7 +71,8 @@ export default function Profile(props) {
                                     <MenuItem disabled={true}>
                                         {profile.name} {profile.lastname}
                                     </MenuItem>
-                                    <MenuItem onClick={handleClick}>
+                                    <Divider />
+                                    <MenuItem className={classes.textcenter} onClick={handleClick}>
                                         Logout
                                     </MenuItem>
                                 </MenuList>
