@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -10,9 +10,11 @@ import Transaction from './Transaction';
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Overview from './Overview';
+import JwtDecode from 'jwt-decode';
+import axios from 'axios'
 
 const useStyles = makeStyles({
-    hide : {
+    hide: {
         display: 'none'
     }
 });
@@ -20,7 +22,24 @@ const useStyles = makeStyles({
 export default function Content() {
     const classes = useStyles()
     const [selectedDate, setSelectedDate] = useState(new Date())
+    const [data, setData] = useState([])
     const [value, setValue] = React.useState(0)
+
+    useEffect(async () => {
+        const token = localStorage.getItem('token')
+        const profile = JwtDecode(token)
+
+        const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
+
+        axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+            .then(res => {
+                Array.from(res.data).map(x => x.expensedate = x.expensedate.split('T')[0])
+                // console.log(cloneData);
+                setData(res.data)
+            })
+            .catch(err => console.log(err))
+
+    }, [])
 
     const handleTabChange = (event, newValue) => {
         setValue(newValue);
@@ -79,10 +98,10 @@ export default function Content() {
             </CardHeader>
             <CardContent>
                 <div id='divTransaction'>
-                    <Transaction selectedDate={selectedDate} />
+                    <Transaction selectedDate={selectedDate} data={data} />
                 </div>
                 <div id='divOverview' className={classes.hide}>
-                    <Overview selectedDate={selectedDate} />
+                    <Overview selectedDate={selectedDate} data={data} />
                 </div>
             </CardContent>
         </Card>

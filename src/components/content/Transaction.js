@@ -6,7 +6,7 @@ import * as Mock from '../../MockData'
 
 const columns = [
     {
-        name: "createdate",
+        name: "expensedate",
         label: "Date",
         options: {
             filter: true,
@@ -22,8 +22,8 @@ const columns = [
         }
     },
     {
-        name: "detail",
-        label: "Deatail",
+        name: "description",
+        label: "Description",
         options: {
             filter: true,
             sort: false,
@@ -55,7 +55,7 @@ const getMuiTheme = createMuiTheme({
             }
         },
         MUIDataTableBodyCell: {
-            cellStackedSmall : {
+            cellStackedSmall: {
                 width: '50px',
                 // paddingBottom : '25px'
             }
@@ -69,14 +69,12 @@ export default function Transaction(props) {
     useEffect(() => {
         const date = props.selectedDate
 
-        const filterDataByDate = Mock.dataList.filter(x =>
+        const filterDataByDate = props.data.filter(x =>
             new Date(x.createdate).getMonth() == date.getMonth()
         )
-        
-        
 
         setData(filterDataByDate)
-    }, [props.selectedDate])
+    }, [props.selectedDate, props.data])
 
     return (
         <MuiThemeProvider theme={getMuiTheme}>

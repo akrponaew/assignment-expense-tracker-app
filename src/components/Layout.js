@@ -10,8 +10,6 @@ import Content from './content/Content';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import Profile from './topbar/Profile';
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -42,14 +40,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Layout(props) {
+export default function Layout() {
     const classes = useStyles()
-    const [profile, setProfile] = useState([])
-
-    useEffect(() => {
-        const _profile = props.location.state.userData[0]
-        setProfile(_profile)
-    })
 
     return (
         <div className={classes.root}>
@@ -60,7 +52,7 @@ export default function Layout(props) {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         Expense Tracker
                     </Typography>
-                    <Profile profile={profile} />
+                    <Profile />
                 </Toolbar>
             </AppBar>
             <main className={classes.content}>

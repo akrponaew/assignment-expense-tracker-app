@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,19 +16,7 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios'
 import { Route, useHistory } from 'react-router-dom';
 import Layout from './Layout';
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-      </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import { Snackbar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -53,22 +41,29 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
     const history = useHistory()
     const classes = useStyles()
     const [username, setUsername] = useState()
     const [password, setPassword] = useState()
+    const [open, setOpen] = useState(false)
+
+    useEffect(() => {
+        if (props.location.state) setOpen(true)
+    }, [props.location.state])
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const url = './user.json'
+        const url = `https://expense-tracker-api-arp.herokuapp.com/api/users/${username}/${password}`
 
         axios.get(url)
             .then(res => {
-                const isUser = Array.from(res.data).filter(x => x.username == username && x.password == password && x.status == 'A')
-                isUser.length ? history.push('/main', { userData: isUser })
-                    : document.getElementById('alertUsernamePassword').classList.remove(classes.hide)
+                localStorage.setItem('token', res.data)
+                history.push('/main')
+                // const isUser = Array.from(res.data).filter(x => x.username == username && x.password == password && x.status == 'A')
+                // isUser.length ? history.push('/main', { userData: isUser })
+                //     : document.getElementById('alertUsernamePassword').classList.remove(classes.hide)
             })
             .catch(err => {
                 console.log(err)
@@ -76,6 +71,14 @@ export default function SignIn() {
 
 
     }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     const handleChange = (e) => {
         const targetName = e.target.name
@@ -117,10 +120,6 @@ export default function SignIn() {
                         autoComplete="current-password"
                         onChange={handleChange}
                     />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
                     <Alert severity="error" id='alertUsernamePassword' className={classes.hide}>Username or Password incorrect.</Alert>
                     <Button
                         type="submit"
@@ -132,11 +131,6 @@ export default function SignIn() {
                         Sign In
                     </Button>
                     <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
-                        </Grid>
                         <Grid item>
                             <Link href="/signup" variant="body2">
                                 {"Don't have an account? Sign Up"}
@@ -145,9 +139,11 @@ export default function SignIn() {
                     </Grid>
                 </form>
             </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
+            <Snackbar open={open} autoHideDuration={6000} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success">
+                    Signup successfully
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }

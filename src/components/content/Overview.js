@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { Grid, makeStyles } from '@material-ui/core';
 import _ from 'lodash'
+import axios from 'axios'
 import * as Mock from '../../MockData'
+import JwtDecode from 'jwt-decode'
 
 const useStyles = makeStyles({
     container: {
         maxWidth: '650px',
         margin: 'auto',
-        padding : '20px',
+        padding: '20px',
         boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)'
     }
 })
@@ -19,10 +21,18 @@ export default function Overview(props) {
     const [label, setLabel] = useState([])
 
     useEffect(() => {
+        // const token = localStorage.getItem('token')
+        // const profile = JwtDecode(token)
+        // const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
+
+        // axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+        //     .then(res => console.log(res))
+        //     .catch(err => console.log(err))
+
         const date = props.selectedDate
 
-        const filterDataByDate = Mock.dataList.filter(x =>
-            new Date(x.createdate).getMonth() == date.getMonth()
+        const filterDataByDate = props.data.filter(x =>
+            new Date(x.expensedate).getMonth() == date.getMonth()
         )
 
         const categories = _(filterDataByDate)
@@ -36,7 +46,7 @@ export default function Overview(props) {
         setData(categories.map(x => x.sum.toFixed(2)))
         setLabel(categories.map(x => x.label))
 
-    }, [props.selectedDate])
+    }, [props.selectedDate, props.data])
 
     const doughnutData = {
         labels: label,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Layout from './components/Layout';
-import Categories from './components/content/Categories';
+import Categories from './components/content/_Categories';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 

@@ -11,6 +11,7 @@ import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
 import { useHistory } from 'react-router-dom'
 import _ from 'lodash'
+import JwtDecode from 'jwt-decode'
 
 const useStyles = makeStyles({
     red: {
@@ -18,22 +19,23 @@ const useStyles = makeStyles({
         backgroundColor: red[500],
     },
 
-    textcenter : {
+    textcenter: {
         justifyContent: 'center',
     }
 })
 
-export default function Profile(props) {
+export default function Profile() {
     const history = useHistory()
     const classes = useStyles()
-    const [profile, setProfile] = useState({})
     const [open, setOpen] = useState(false)
+    const [profile, setProfile] = useState([])
     const anchorRef = useRef(null);
 
     useEffect(() => {
-        setProfile(props.profile)
-        
-    }, [props.profile])
+        const token = localStorage.getItem('token')
+        const _profile = JwtDecode(token)
+        setProfile(_profile)
+    }, [])
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -48,6 +50,7 @@ export default function Profile(props) {
     };
 
     const handleClick = () => {
+        localStorage.removeItem('token')
         history.push('/')
     }
 
@@ -57,7 +60,7 @@ export default function Profile(props) {
                 color="inherit"
                 ref={anchorRef}
                 onClick={handleToggle}>
-                <Avatar className={classes.red}>{profile.name ? profile.name.substring(0,1) : ''}</Avatar>
+                <Avatar className={classes.red}>{profile.name ? profile.name.substring(0, 1) : ''}</Avatar>
             </IconButton>
             <Popper open={open} anchorEl={anchorRef.current} placement='bottom-end' role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (
