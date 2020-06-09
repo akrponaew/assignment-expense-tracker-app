@@ -42,22 +42,20 @@ const columns = [
 const options = {
     download: false,
     print: false,
-    pagination: false
+    pagination: false,
+    selectableRowsHeader: false,
+    responsive: 'stacked'
+    // selectableRowsOnClick: true
     // filterType: 'checkbox',
 };
 
 const getMuiTheme = createMuiTheme({
     overrides: {
-        MuiTableCell: {
-            root: {
-                // backgroundColor: "#FF0000"
-                borderBottom: '0px solid rgba(224, 224, 224, 1)'
-            }
-        },
         MUIDataTableBodyCell: {
-            cellStackedSmall: {
-                width: '50px',
-                // paddingBottom : '25px'
+            stackedCommon: {
+                '@media (max-width:959.95px)': {
+                    height: '100%'
+                }
             }
         }
     }
