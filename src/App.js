@@ -6,7 +6,7 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import _table from './components/_table';
 
-function App() {
+function App(props) {
   return (
     <BrowserRouter>
       <Switch>

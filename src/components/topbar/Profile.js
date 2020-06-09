@@ -50,8 +50,9 @@ export default function Profile() {
     };
 
     const handleClick = () => {
-        localStorage.removeItem('token')
-        history.push('/')
+        // localStorage.removeItem('token')
+        // history.push('/')
+        window.location.href = '/'
     }
 
     return (

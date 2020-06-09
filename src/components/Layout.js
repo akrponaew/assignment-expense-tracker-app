@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {useHistory} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import Content from './content/Content';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import Profile from './topbar/Profile';
+import axios from 'axios'
+import JwtDecode from 'jwt-decode'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,6 +45,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Layout() {
     const classes = useStyles()
+    const history = useHistory()
+
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token')
+    //     const profile = JwtDecode(token)
+    //     const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
+
+    //     axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+    //         .catch(err => history.push('/'))
+    // })
 
     return (
         <div className={classes.root}>

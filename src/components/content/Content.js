@@ -38,7 +38,7 @@ export default function Content() {
                 Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
                 setData(res.data)
             })
-            .catch(err => console.log(err))
+            .catch(err => window.location.href = '/')
 
     }, [])
 
