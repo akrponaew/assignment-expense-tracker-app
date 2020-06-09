@@ -17,23 +17,23 @@ import JwtDecode from 'jwt-decode'
 
 const _categories = [
     {
-        value: 'fooranddrink',
+        value: 'Food & Drink',
         label: 'Food & Drink',
     },
     {
-        value: 'travel',
+        value: 'Travel',
         label: 'Travel',
     },
     {
-        value: 'clothes',
+        value: 'Clothes',
         label: 'Clothes',
     },
     {
-        value: 'sport',
+        value: 'Sport',
         label: 'Sport',
     },
     {
-        value: 'other',
+        value: 'Other',
         label: 'Other',
     }
 ];
@@ -55,7 +55,7 @@ function SimpleDialog(props) {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [description, setDescription] = useState('')
     const [amount, setAmount] = useState(0)
-    const [categories, setCategories] = useState('fooranddrink');
+    const [categories, setCategories] = useState('Food & Drink');
     const classes = useStyles();
     const { onClose, selectedValue, open } = props;
 

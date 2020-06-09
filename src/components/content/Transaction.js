@@ -1,53 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import MUIDataTable from "mui-datatables";
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Divider from '@material-ui/core/Divider'
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import MomentUtils from '@date-io/moment'
 import _ from 'lodash'
+import { EditIcon } from '@material-ui/icons/Edit'
+import Button from '@material-ui/core/Button'
 import * as Mock from '../../MockData'
-
-const columns = [
-    {
-        name: "expensedate",
-        label: "Date",
-        options: {
-            filter: true,
-            sort: true,
-        }
-    },
-    {
-        name: "categories",
-        label: "Categories",
-        options: {
-            filter: true,
-            sort: true,
-        }
-    },
-    {
-        name: "description",
-        label: "Description",
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-    {
-        name: "amount",
-        label: "Amount",
-        options: {
-            filter: true,
-            sort: false,
-        }
-    },
-];
-
-const options = {
-    download: false,
-    print: false,
-    pagination: false,
-    selectableRowsHeader: false,
-    responsive: 'stacked'
-    // selectableRowsOnClick: true
-    // filterType: 'checkbox',
-};
+import axios from 'axios'
+import moment from 'moment'
+import JwtDecode from 'jwt-decode'
 
 const getMuiTheme = createMuiTheme({
     overrides: {
@@ -61,8 +28,24 @@ const getMuiTheme = createMuiTheme({
     }
 })
 
+const useStyle = makeStyles({
+    form: {
+        margin: '30px 50px'
+    },
+    formControl: {
+        marginBottom: '25px'
+    }
+})
+
 export default function Transaction(props) {
+    const classes = useStyle()
     const [data, setData] = useState([])
+    const [selectedDate, setSelectedDate] = useState(new Date())
+    const [open, setOpen] = useState(false)
+    const [categories, setCategories] = useState()
+    const [description, setDescription] = useState()
+    const [amount, setAmount] = useState(0)
+    const [id, setId] = useState()
 
     useEffect(() => {
         const date = props.selectedDate
@@ -74,14 +57,210 @@ export default function Transaction(props) {
         setData(filterDataByDate)
     }, [props.selectedDate, props.data])
 
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleDateChange = (date) => {
+        setSelectedDate(date._d);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        const token = localStorage.getItem('token')
+        const profile = JwtDecode(token)
+
+        const month = selectedDate.toString().split(' ')[1]
+        const year = +selectedDate.toString().split(' ')[3]
+        const expensedate = selectedDate.toISOString().split('T')[0]
+
+        const data = {
+            username: profile.username,
+            categories: categories,
+            description: description,
+            amount: amount,
+            month: month,
+            year: year,
+            expensedate: expensedate
+        }
+
+        const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${id}`
+
+        axios.put(url, data, { headers: { 'authorization': `bearer ${token}` } })
+            .then(res => {
+                setOpen(false)
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleChange = (e) => {
+        const targetName = e.target.name
+
+        switch (targetName) {
+            case 'categories':
+                setCategories(e.target.value)
+                break;
+            case 'amount':
+                setAmount(e.target.value)
+                break;
+            case 'description':
+                setDescription(e.target.value)
+                break;
+        }
+    }
+
+    const _categories = [
+        {
+            value: 'Food & Drink',
+            label: 'Food & Drink',
+        },
+        {
+            value: 'Travel',
+            label: 'Travel',
+        },
+        {
+            value: 'Clothes',
+            label: 'Clothes',
+        },
+        {
+            value: 'Sport',
+            label: 'Sport',
+        },
+        {
+            value: 'Other',
+            label: 'Other',
+        }
+    ];
+
+    const columns = [
+        {
+            name: "_id",
+            options: {
+                filter: false,
+                sort: true,
+                display: 'false',
+                viewColumns: false
+            }
+        },
+        {
+            name: "expensedate",
+            label: "Date",
+            options: {
+                filter: true,
+                sort: true,
+            }
+        },
+        {
+            name: "categories",
+            label: "Categories",
+            options: {
+                filter: true,
+                sort: true,
+            }
+        },
+        {
+            name: "description",
+            label: "Description",
+            options: {
+                filter: true,
+                sort: false,
+            }
+        },
+        {
+            name: "amount",
+            label: "Amount",
+            options: {
+                filter: true,
+                sort: false,
+            }
+        }
+    ]
+
+    const options = {
+        download: false,
+        print: false,
+        pagination: false,
+        selectableRowsHeader: false,
+        responsive: 'stacked',
+        onRowClick: (event, rowData) => {
+            setId(event[0])
+            setSelectedDate(moment(event[1]).format('DD/MM/yyyy'))
+            setCategories(event[2])
+            setDescription(event[3])
+            setAmount(event[4])
+            setOpen(true)
+        },
+    }
+
     return (
-        <MuiThemeProvider theme={getMuiTheme}>
-            <MUIDataTable
-                title={`Total ${_.sumBy(data, 'amount')} Baht`}
-                data={data}
-                columns={columns}
-                options={options}
-            />
-        </MuiThemeProvider>
+        <React.Fragment>
+            <MuiThemeProvider theme={getMuiTheme}>
+                <MUIDataTable
+                    title={`Total ${_.sumBy(data, 'amount')} Baht`}
+                    data={data}
+                    columns={columns}
+                    options={options}
+                />
+            </MuiThemeProvider>
+
+            <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} >
+                <DialogTitle id="simple-dialog-title">Edit Transaction</DialogTitle>
+                <Divider />
+                <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
+                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                        <KeyboardDatePicker
+                            variant="inline"
+                            margin="normal"
+                            format="DD/MM/yyyy"
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                            autoOk={true}
+                            fullWidth={true}
+                            className={classes.formControl}
+                        />
+                    </MuiPickersUtilsProvider>
+                    <TextField
+                        select
+                        label="categories"
+                        name='categories'
+                        value={categories}
+                        onChange={handleChange}
+                        fullWidth={true}
+                        className={classes.formControl}
+                    >
+                        {_categories.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
+                        className={classes.formControl}
+                        value={description}
+                        name='description'
+                        label="Description"
+                        multiline={true}
+                        fullWidth={true}
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        className={classes.formControl}
+                        value={amount}
+                        name='amount'
+                        label="Amount"
+                        type='number'
+                        fullWidth={true}
+                        onChange={handleChange}
+                    />
+                    <Button variant="contained" type='submit' color="primary" fullWidth={true}>
+                        EDIT
+                    </Button>
+                </form>
+            </Dialog>
+        </React.Fragment>
     )
 }

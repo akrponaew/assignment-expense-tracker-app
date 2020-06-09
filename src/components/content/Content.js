@@ -12,6 +12,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Overview from './Overview';
 import JwtDecode from 'jwt-decode';
 import axios from 'axios'
+import moment from 'moment'
 
 const useStyles = makeStyles({
     hide: {
@@ -33,8 +34,8 @@ export default function Content() {
 
         axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
             .then(res => {
-                Array.from(res.data).map(x => x.expensedate = x.expensedate.split('T')[0])
-                // console.log(cloneData);
+                // Array.from(res.data).map(x => x.expensedate = x.expensedate.split('T')[0])
+                Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
                 setData(res.data)
             })
             .catch(err => console.log(err))
