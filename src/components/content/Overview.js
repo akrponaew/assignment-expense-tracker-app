@@ -5,6 +5,7 @@ import _ from 'lodash'
 import axios from 'axios'
 import * as Mock from '../../MockData'
 import JwtDecode from 'jwt-decode'
+import moment from 'moment'
 
 const useStyles = makeStyles({
     container: {
@@ -29,11 +30,9 @@ export default function Overview(props) {
         //     .then(res => console.log(res))
         //     .catch(err => console.log(err))
 
-        const date = props.selectedDate
+        const date = props.selectedDate.toString().split(' ')[1]
 
-        const filterDataByDate = props.data.filter(x =>
-            new Date(x.expensedate).getMonth() == date.getMonth()
-        )
+        const filterDataByDate = props.data.filter(x => x.month == date)
 
         const categories = _(filterDataByDate)
             .groupBy('categories')

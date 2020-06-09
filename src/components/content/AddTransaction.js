@@ -14,6 +14,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import MomentUtils from '@date-io/moment'
 import axios from 'axios'
 import JwtDecode from 'jwt-decode'
+import SaveIcon from '@material-ui/icons/Save'
 
 const _categories = [
     {
@@ -163,8 +164,8 @@ function SimpleDialog(props) {
                     fullWidth={true}
                     onChange={handleChange}
                 />
-                <Button variant="contained" type='submit' color="primary" fullWidth={true}>
-                    ADD
+                <Button variant="contained" startIcon={<SaveIcon />} type='submit' color="primary" fullWidth={true}>
+                    SAVE
                 </Button>
             </form>
         </Dialog>

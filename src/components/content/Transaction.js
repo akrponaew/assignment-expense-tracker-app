@@ -9,12 +9,14 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
 import _ from 'lodash'
-import { EditIcon } from '@material-ui/icons/Edit'
 import Button from '@material-ui/core/Button'
 import * as Mock from '../../MockData'
 import axios from 'axios'
 import moment from 'moment'
 import JwtDecode from 'jwt-decode'
+import { Grid } from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
 
 const getMuiTheme = createMuiTheme({
     overrides: {
@@ -110,6 +112,17 @@ export default function Transaction(props) {
         }
     }
 
+    const handleDelete = (e) => {
+        const token = localStorage.getItem('token')
+        const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${id}`
+
+        axios.delete(url, { headers: { 'authorization': `bearer ${token}` } })
+            .then(res => {
+                setOpen(false)
+            })
+            .catch(err => console.log(err))
+    }
+
     const _categories = [
         {
             value: 'Food & Drink',
@@ -181,7 +194,7 @@ export default function Transaction(props) {
         download: false,
         print: false,
         pagination: false,
-        selectableRowsHeader: false,
+        selectableRows: false,
         responsive: 'stacked',
         onRowClick: (event, rowData) => {
             setId(event[0])
@@ -256,9 +269,20 @@ export default function Transaction(props) {
                         fullWidth={true}
                         onChange={handleChange}
                     />
-                    <Button variant="contained" type='submit' color="primary" fullWidth={true}>
-                        EDIT
-                    </Button>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained" startIcon={<EditIcon />} type='submit' color="primary" >
+                                EDIT
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" onClick={handleDelete} startIcon={<DeleteIcon />} color="secondary">
+                                Delete
+                            </Button>
+                        </Grid>
+                    </Grid>
+
+
                 </form>
             </Dialog>
         </React.Fragment>
