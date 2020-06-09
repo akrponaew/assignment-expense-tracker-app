@@ -44,6 +44,7 @@ export default function Transaction(props) {
     const [data, setData] = useState([])
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [open, setOpen] = useState(false)
+    const [edit, setEdit] = useState(false)
     const [categories, setCategories] = useState()
     const [description, setDescription] = useState()
     const [amount, setAmount] = useState(0)
@@ -105,6 +106,7 @@ export default function Transaction(props) {
                 break;
             case 'amount':
                 setAmount(e.target.value)
+                e.target.value ? setEdit(false) : setEdit(true)
                 break;
             case 'description':
                 setDescription(e.target.value)
@@ -268,10 +270,12 @@ export default function Transaction(props) {
                         type='number'
                         fullWidth={true}
                         onChange={handleChange}
+                        placeholder='0.00'
+                        inputMode='decimal'
                     />
                     <Grid container justify="space-between">
                         <Grid item>
-                            <Button variant="contained" startIcon={<EditIcon />} type='submit' color="primary" >
+                            <Button variant="contained" disabled={edit} startIcon={<EditIcon />} type='submit' color="primary" >
                                 EDIT
                             </Button>
                         </Grid>

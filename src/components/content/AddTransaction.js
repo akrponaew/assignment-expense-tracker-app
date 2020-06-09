@@ -57,6 +57,7 @@ function SimpleDialog(props) {
     const [description, setDescription] = useState('')
     const [amount, setAmount] = useState(0)
     const [categories, setCategories] = useState('Food & Drink');
+    const [save, setSave] = useState(true)
     const classes = useStyles();
     const { onClose, selectedValue, open } = props;
 
@@ -106,6 +107,7 @@ function SimpleDialog(props) {
                 break;
             case 'amount':
                 setAmount(e.target.value)
+                e.target.value ? setSave(false) : setSave(true)
                 break;
             case 'description':
                 setDescription(e.target.value)
@@ -163,8 +165,10 @@ function SimpleDialog(props) {
                     type='number'
                     fullWidth={true}
                     onChange={handleChange}
+                    inputMode='decimal'
+                    placeholder='0.00'
                 />
-                <Button variant="contained" startIcon={<SaveIcon />} type='submit' color="primary" fullWidth={true}>
+                <Button variant="contained" disabled={save} startIcon={<SaveIcon />} type='submit' color="primary" fullWidth={true}>
                     SAVE
                 </Button>
             </form>
