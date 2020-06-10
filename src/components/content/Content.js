@@ -34,7 +34,7 @@ export default function Content() {
 
         axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
             .then(res => {
-                // Array.from(res.data).map(x => x.expensedate = x.expensedate.split('T')[0])
+                //change expense date format
                 Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
                 setData(res.data)
             })

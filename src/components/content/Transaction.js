@@ -17,6 +17,7 @@ import JwtDecode from 'jwt-decode'
 import { Grid } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import { blue } from '@material-ui/core/colors';
 
 const getMuiTheme = createMuiTheme({
     overrides: {
@@ -36,6 +37,10 @@ const useStyle = makeStyles({
     },
     formControl: {
         marginBottom: '25px'
+    },
+    avatar: {
+        backgroundColor: blue[100],
+        color: blue[600],
     }
 })
 
@@ -77,7 +82,7 @@ export default function Transaction(props) {
         const month = selectedDate.toString().split(' ')[1]
         const year = +selectedDate.toString().split(' ')[3]
         const expensedate = selectedDate
-        
+
         const data = {
             username: profile.username,
             categories: categories,
@@ -92,6 +97,15 @@ export default function Transaction(props) {
 
         axios.put(url, data, { headers: { 'authorization': `bearer ${token}` } })
             .then(res => {
+                const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
+
+                axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+                    .then(res => {
+                        //change expense date format
+                        Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
+                        setData(res.data)
+                    })
+
                 setOpen(false)
             })
             .catch(err => console.log(err))
@@ -116,10 +130,20 @@ export default function Transaction(props) {
 
     const handleDelete = (e) => {
         const token = localStorage.getItem('token')
+        const profile = JwtDecode(token)
         const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${id}`
 
         axios.delete(url, { headers: { 'authorization': `bearer ${token}` } })
             .then(res => {
+                const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
+
+                axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+                    .then(res => {
+                        //change expense date format
+                        Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
+                        setData(res.data)
+                    })
+
                 setOpen(false)
             })
             .catch(err => console.log(err))
@@ -146,7 +170,7 @@ export default function Transaction(props) {
             value: 'Other',
             label: 'Other',
         }
-    ];
+    ]
 
     const columns = [
         {

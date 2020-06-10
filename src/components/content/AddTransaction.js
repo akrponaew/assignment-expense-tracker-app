@@ -94,6 +94,15 @@ function SimpleDialog(props) {
 
         axios.post(url, data, { headers: { 'authorization': `bearer ${token}` } })
             .then(res => {
+                const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
+
+                axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+                    .then(res => {
+                        //change expense date format
+                        Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
+                        // setData(res.data)
+                    })
+
                 onClose(selectedValue);
             })
             .catch(err => console.log(err))
