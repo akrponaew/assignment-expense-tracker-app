@@ -49,9 +49,6 @@ const _categories = [
     }
 ]
 
-const token = localStorage.getItem('token')
-const profile = JwtDecode(token)
-
 const useStyles = makeStyles({
     hide: {
         display: 'none'
@@ -82,6 +79,8 @@ export default function Content() {
     const [selectedDateAddtransaction, setSelectedDateAddtransaction] = useState(new Date())
 
     useEffect(() => {
+        const token = localStorage.getItem('token')
+        const profile = JwtDecode(token)
         const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
 
         axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
