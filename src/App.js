@@ -1,16 +1,16 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Layout from './components/Layout';
-import ExpenseList from './components/content/ExpenseList';
-import Categories from './components/content/Categories';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path='/' component={Layout} />
-        <Route exact path='/expense' component={ExpenseList} />
-        <Route exact path='/cate' component={Categories} />
+        <Route exact path='/' component={SignIn} />
+        <Route path='/main' component={Layout} />
+        <Route path='/signup' component={SignUp} />
       </Switch>
     </BrowserRouter>
   );
