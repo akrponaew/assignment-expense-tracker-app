@@ -17,11 +17,12 @@ import Dialog from '@material-ui/core/Dialog';
 import { blue } from '@material-ui/core/colors';
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
-import { Divider } from '@material-ui/core'
+import { Divider, Grid } from '@material-ui/core'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SaveIcon from '@material-ui/icons/Save'
 import Button from '@material-ui/core/Button';
+import CloseIcon from '@material-ui/icons/Close';
 
 const _categories = [
     {
@@ -233,7 +234,18 @@ export default function Content() {
             </Card>
 
             <Dialog onClose={handleCloseAddTransaction} aria-labelledby="simple-dialog-title" open={openAddTransaction} >
-                <DialogTitle id="simple-dialog-title">Add Transaction</DialogTitle>
+                <Grid container>
+                    <Grid item xs>
+                        <DialogTitle>Add Transaction</DialogTitle>
+                    </Grid>
+                    <Grid item>
+                        <DialogTitle>
+                            <IconButton size='small' onClick={handleCloseAddTransaction}>
+                                <CloseIcon color='secondary' />
+                            </IconButton>
+                        </DialogTitle>
+                    </Grid>
+                </Grid>
                 <Divider />
                 <form noValidate autoComplete="off" onSubmit={handleSubmit} className={classes.form}>
                     <MuiPickersUtilsProvider utils={MomentUtils}>

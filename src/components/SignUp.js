@@ -3,11 +3,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Alert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -69,10 +66,6 @@ export default function SignUp() {
                 setConfirmPassword(e.target.value)
                 break;
         }
-        // console.log(password, confirmPassword);
-
-        // if (password && (password != confirmPassword)) document.getElementById('alertConfirmPassword').classList.remove(classes.hide)
-        // else document.getElementById('alertConfirmPassword').classList.add(classes.hide)
     }
 
     const handelSubmit = (e) => {
@@ -93,9 +86,8 @@ export default function SignUp() {
         }
 
         axios.post(url, data)
-            .then(res => { history.push('/', {success : true}) })
-            .catch(err => console.log(err))
-
+            .then(res => { history.push('/', { success: true }) })
+            .catch(err => document.getElementById('alertUsernameAlreadyExists').classList.remove(classes.hide))
     }
 
     return (
@@ -179,8 +171,11 @@ export default function SignUp() {
                                 onChange={handleChange}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <Alert severity="error" id='alertConfirmPassword' className={classes.hide}>Confirm password not match with password.</Alert>
+                        <Grid item xs={12} id='alertConfirmPassword' className={classes.hide}>
+                            <Alert severity="error" >Confirm password not match with password.</Alert>
+                        </Grid>
+                        <Grid item xs={12} id='alertUsernameAlreadyExists' className={classes.hide}>
+                            <Alert severity="error" >Username already exists.</Alert>
                         </Grid>
                     </Grid>
 
