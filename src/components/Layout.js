@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Content from './content/Content';
 import AccountBalanceWalletOutlinedIcon from '@material-ui/icons/AccountBalanceWalletOutlined';
 import Profile from './topbar/Profile';
+import blue from '@material-ui/core/colors/blue';
 import axios from 'axios'
 import JwtDecode from 'jwt-decode'
 
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         height: '100vh',
         overflow: 'auto',
+        backgroundColor: blue[50]
     },
     container: {
         paddingTop: theme.spacing(4),
@@ -63,7 +65,7 @@ export default function Layout() {
                 <Toolbar className={classes.toolbar}>
                     <AccountBalanceWalletOutlinedIcon />
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Expense Tracker
+                        EXPENSE TRACKER
                     </Typography>
                     <Profile />
                 </Toolbar>

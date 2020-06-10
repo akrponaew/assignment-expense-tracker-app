@@ -24,6 +24,9 @@ import Alert from '@material-ui/lab/Alert'
 const getMuiTheme = createMuiTheme({
     overrides: {
         MUIDataTableBodyCell: {
+            root: {
+                cursor: 'pointer'
+            },
             stackedCommon: {
                 '@media (max-width:959.95px)': {
                     height: '100%'
@@ -57,7 +60,7 @@ export default function Transaction(props) {
 
     useEffect(() => {
         const date = props.selectedDate
-        const filterDataByDate = props.data.filter(x => moment(x.expensedate,'DD/MM/yyyy').month() == date.getMonth())
+        const filterDataByDate = props.data.filter(x => moment(x.expensedate, 'DD/MM/yyyy').month() == date.getMonth())
 
         setData(filterDataByDate)
     }, [props.selectedDate, props.data])
@@ -203,6 +206,7 @@ export default function Transaction(props) {
             options: {
                 filter: true,
                 sort: true,
+                sortDirection: 'desc'
             }
         },
         {
@@ -217,7 +221,7 @@ export default function Transaction(props) {
             name: "description",
             label: "Description",
             options: {
-                filter: true,
+                filter: false,
                 sort: false,
             }
         },
@@ -225,8 +229,8 @@ export default function Transaction(props) {
             name: "amount",
             label: "Amount",
             options: {
-                filter: true,
-                sort: false,
+                filter: false,
+                sort: true,
             }
         }
     ]
@@ -239,7 +243,7 @@ export default function Transaction(props) {
         responsive: 'stacked',
         onRowClick: (event, rowData) => {
             setId(event[0])
-            setSelectedDate(moment(event[1],'DD/MM/yyyy'))
+            setSelectedDate(moment(event[1], 'DD/MM/yyyy'))
             setCategories(event[2])
             setDescription(event[3])
             setAmount(event[4])

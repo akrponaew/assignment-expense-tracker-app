@@ -162,6 +162,17 @@ export default function Content() {
         setValue(newValue);
 
         if (newValue) {
+            const token = localStorage.getItem('token')
+            const profile = JwtDecode(token)
+            const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
+
+            axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+                .then(res => {
+                    //change expense date format
+                    Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
+                    setData(res.data)
+                })
+
             document.getElementById('divTransaction').classList.add(classes.hide)
             document.getElementById('divOverview').classList.remove(classes.hide)
         }
@@ -195,7 +206,7 @@ export default function Content() {
                         <MuiPickersUtilsProvider utils={MomentUtils}>
                             <KeyboardDatePicker
                                 variant="inline"
-                                margin="normal"
+                                margin="none"
                                 value={selectedDate}
                                 onChange={handleDateChange}
                                 KeyboardButtonProps={{
@@ -207,16 +218,18 @@ export default function Content() {
                         </MuiPickersUtilsProvider>
                     }
                     action={
-                        // <AddTransaction />
-                        <IconButton
-                            aria-label="add transaction"
-                            onClick={handleOpenAddTransaction}
-                        >
-                            <AddCircleIcon
-                                color='secondary'
-                                fontSize='large'
-                            />
-                        </IconButton>
+                        // <IconButton
+                        //     aria-label="add transaction"
+                        //     onClick={handleOpenAddTransaction}
+                        // >
+                        //     <AddCircleIcon
+                        //         color='secondary'
+                        //         fontSize='large'
+                        //     />
+                        // </IconButton>
+                        <Button variant="contained" onClick={handleOpenAddTransaction} startIcon={<AddCircleIcon />} color="secondary" fullWidth={true}>
+                            NEW
+                        </Button>
                     }
                 />
                 <CardHeader
@@ -232,9 +245,7 @@ export default function Content() {
                             <Tab label="Overview" />
                         </Tabs>
                     }
-                >
-
-                </CardHeader>
+                />
                 <CardContent>
                     <div id='divTransaction'>
                         <Transaction selectedDate={selectedDate} data={data} />
