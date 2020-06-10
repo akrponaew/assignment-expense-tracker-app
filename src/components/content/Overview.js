@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Doughnut } from 'react-chartjs-2'
 import { Grid, makeStyles } from '@material-ui/core';
 import _ from 'lodash'
-import axios from 'axios'
-import * as Mock from '../../MockData'
-import JwtDecode from 'jwt-decode'
-import moment from 'moment'
 
 const useStyles = makeStyles({
     container: {
