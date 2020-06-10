@@ -74,7 +74,7 @@ export default function Content() {
     const [categories, setCategories] = useState('Food & Drink');
     const [save, setSave] = useState(true)
 
-    useEffect(async () => {
+    useEffect(() => {
         const token = localStorage.getItem('token')
         const profile = JwtDecode(token)
 
@@ -230,7 +230,7 @@ export default function Content() {
                         <Overview selectedDate={selectedDate} data={data} />
                     </div>
                 </CardContent>
-            </Card>=
+            </Card>
 
             <Dialog onClose={handleCloseAddTransaction} aria-labelledby="simple-dialog-title" open={openAddTransaction} >
                 <DialogTitle id="simple-dialog-title">Add Transaction</DialogTitle>
