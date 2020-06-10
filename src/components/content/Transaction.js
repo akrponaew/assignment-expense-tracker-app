@@ -17,7 +17,6 @@ import JwtDecode from 'jwt-decode'
 import { Grid } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import { blue } from '@material-ui/core/colors';
 
 const getMuiTheme = createMuiTheme({
     overrides: {
@@ -37,10 +36,6 @@ const useStyle = makeStyles({
     },
     formControl: {
         marginBottom: '25px'
-    },
-    avatar: {
-        backgroundColor: blue[100],
-        color: blue[600],
     }
 })
 
@@ -170,7 +165,7 @@ export default function Transaction(props) {
             value: 'Other',
             label: 'Other',
         }
-    ]
+    ];
 
     const columns = [
         {

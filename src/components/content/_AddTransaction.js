@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
-import { Divider } from '@material-ui/core';
+import { Divider } from '@material-ui/core'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import MomentUtils from '@date-io/moment'
 import axios from 'axios'
@@ -38,7 +38,7 @@ const _categories = [
         value: 'Other',
         label: 'Other',
     }
-];
+]
 
 const useStyles = makeStyles({
     avatar: {
@@ -189,30 +189,28 @@ function SimpleDialog(props) {
 SimpleDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
-};
+}
 
 export default function AddTransaction() {
-    const [open, setOpen] = useState(false);
-    const anchorRef = useRef(null);
+    const [openAddTransaction, setOpenAddTransaction] = useState(false)
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+    const handleOpenAddTransaction = () => {
+        setOpenAddTransaction(true);
+    }
 
-    const handleClose = (value) => {
-        setOpen(false)
-    };
+    const handleCloseAddTransaction = (value) => {
+        setOpenAddTransaction(false)
+    }
 
     return (
         <div>
             <SimpleDialog
-                open={open}
-                onClose={handleClose}
+                open={openAddTransaction}
+                onClose={handleCloseAddTransaction}
             />
             <IconButton
                 aria-label="add transaction"
-                ref={anchorRef}
-                onClick={handleClickOpen}
+                onClick={handleOpenAddTransaction}
             >
                 <AddCircleIcon
                     color='secondary'
