@@ -17,7 +17,9 @@ import JwtDecode from 'jwt-decode'
 import { Grid } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@material-ui/icons/Close'
+import { Snackbar } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 
 const getMuiTheme = createMuiTheme({
     overrides: {
@@ -46,6 +48,8 @@ export default function Transaction(props) {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [open, setOpen] = useState(false)
     const [edit, setEdit] = useState(false)
+    const [openEditAlert, setOpenEditAlert] = useState(false)
+    const [openDeleteAlert, setOpenDeleteAlert] = useState(false)
     const [categories, setCategories] = useState()
     const [description, setDescription] = useState()
     const [amount, setAmount] = useState(0)
@@ -53,10 +57,7 @@ export default function Transaction(props) {
 
     useEffect(() => {
         const date = props.selectedDate
-
-        const filterDataByDate = props.data.filter(x =>
-            new Date(x.createdate).getMonth() == date.getMonth()
-        )
+        const filterDataByDate = props.data.filter(x => moment(x.expensedate,'DD/MM/yyyy').month() == date.getMonth())
 
         setData(filterDataByDate)
     }, [props.selectedDate, props.data])
@@ -66,7 +67,7 @@ export default function Transaction(props) {
     }
 
     const handleDateChange = (date) => {
-        setSelectedDate(date._d);
+        setSelectedDate(date);
     }
 
     const handleSubmit = (e) => {
@@ -100,6 +101,7 @@ export default function Transaction(props) {
                         //change expense date format
                         Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
                         setData(res.data)
+                        setOpenEditAlert(true)
                     })
 
                 setOpen(false)
@@ -138,11 +140,28 @@ export default function Transaction(props) {
                         //change expense date format
                         Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
                         setData(res.data)
+                        setOpenDeleteAlert(true)
                     })
 
                 setOpen(false)
             })
             .catch(err => console.log(err))
+    }
+
+    const handleEditAlertClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenEditAlert(false);
+    }
+
+    const handleDeleteAlertClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenDeleteAlert(false);
     }
 
     const _categories = [
@@ -220,7 +239,7 @@ export default function Transaction(props) {
         responsive: 'stacked',
         onRowClick: (event, rowData) => {
             setId(event[0])
-            setSelectedDate(moment(event[1]).format('DD/MM/yyyy'))
+            setSelectedDate(moment(event[1],'DD/MM/yyyy'))
             setCategories(event[2])
             setDescription(event[3])
             setAmount(event[4])
@@ -316,10 +335,20 @@ export default function Transaction(props) {
                             </Button>
                         </Grid>
                     </Grid>
-
-
                 </form>
             </Dialog>
+
+            <Snackbar open={openEditAlert} autoHideDuration={6000} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} onClose={handleEditAlertClose}>
+                <Alert onClose={handleEditAlertClose} severity="success">
+                    Edit successfully
+                </Alert>
+            </Snackbar>
+
+            <Snackbar open={openDeleteAlert} autoHideDuration={6000} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} onClose={handleDeleteAlertClose}>
+                <Alert onClose={handleDeleteAlertClose} severity="success">
+                    Delete Completed
+                </Alert>
+            </Snackbar>
         </React.Fragment>
     )
 }

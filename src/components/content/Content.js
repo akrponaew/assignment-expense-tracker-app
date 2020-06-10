@@ -23,6 +23,8 @@ import IconButton from '@material-ui/core/IconButton'
 import SaveIcon from '@material-ui/icons/Save'
 import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
+import { Snackbar } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 
 const _categories = [
     {
@@ -68,6 +70,7 @@ export default function Content() {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [data, setData] = useState([])
     const [openAddTransaction, setOpenAddTransaction] = useState(false)
+    const [openAddAlert, setOpenAddAlert] = useState(false)
     const [value, setValue] = useState(0)
     const [selectedDateAddtransaction, setSelectedDateAddtransaction] = useState(new Date())
     const [description, setDescription] = useState('')
@@ -90,10 +93,6 @@ export default function Content() {
             .catch(err => window.location.href = '/')
 
     }, [])
-
-    const handleDateChangeAddTransaction = (date) => {
-        setSelectedDateAddtransaction(date._d);
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -126,6 +125,7 @@ export default function Content() {
                         //change expense date format
                         Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
                         setData(res.data)
+                        setOpenAddAlert(true)
                     })
 
                 setOpenAddTransaction(false);
@@ -150,6 +150,14 @@ export default function Content() {
         }
     }
 
+    const handleAddAlertClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenAddAlert(false);
+    }
+
     const handleTabChange = (event, newValue) => {
         setValue(newValue);
 
@@ -164,7 +172,11 @@ export default function Content() {
     };
 
     const handleDateChange = (date) => {
-        setSelectedDate(date._d);
+        setSelectedDate(date._d)
+    }
+
+    const handleDateChangeAddTransaction = (date) => {
+        setSelectedDateAddtransaction(moment(date))
     }
 
     const handleOpenAddTransaction = () => {
@@ -301,6 +313,12 @@ export default function Content() {
                     </Button>
                 </form>
             </Dialog>
+
+            <Snackbar open={openAddAlert} autoHideDuration={6000} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} onClose={handleAddAlertClose}>
+                <Alert onClose={handleAddAlertClose} severity="success">
+                    Add Transaction Completed
+                </Alert>
+            </Snackbar>
         </React.Fragment>
     )
 }
