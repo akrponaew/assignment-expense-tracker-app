@@ -76,8 +76,8 @@ export default function Transaction(props) {
 
         const month = selectedDate.toString().split(' ')[1]
         const year = +selectedDate.toString().split(' ')[3]
-        const expensedate = selectedDate.toISOString().split('T')[0]
-
+        const expensedate = selectedDate
+        
         const data = {
             username: profile.username,
             categories: categories,

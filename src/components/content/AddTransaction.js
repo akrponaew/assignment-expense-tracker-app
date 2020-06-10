@@ -15,6 +15,7 @@ import MomentUtils from '@date-io/moment'
 import axios from 'axios'
 import JwtDecode from 'jwt-decode'
 import SaveIcon from '@material-ui/icons/Save'
+import moment from 'moment'
 
 const _categories = [
     {
@@ -77,7 +78,7 @@ function SimpleDialog(props) {
 
         const month = selectedDate.toString().split(' ')[1]
         const year = +selectedDate.toString().split(' ')[3]
-        const expensedate = selectedDate.toISOString().split('T')[0]
+        const expensedate = selectedDate
 
         const data = {
             username: profile.username,
