@@ -49,6 +49,9 @@ const _categories = [
     }
 ]
 
+const token = localStorage.getItem('token')
+const profile = JwtDecode(token)
+
 const useStyles = makeStyles({
     hide: {
         display: 'none'
@@ -67,21 +70,18 @@ const useStyles = makeStyles({
 
 export default function Content() {
     const classes = useStyles()
-    const [selectedDate, setSelectedDate] = useState(new Date())
     const [data, setData] = useState([])
-    const [openAddTransaction, setOpenAddTransaction] = useState(false)
-    const [openAddAlert, setOpenAddAlert] = useState(false)
     const [value, setValue] = useState(0)
-    const [selectedDateAddtransaction, setSelectedDateAddtransaction] = useState(new Date())
-    const [description, setDescription] = useState('')
-    const [amount, setAmount] = useState(0)
-    const [categories, setCategories] = useState('Food & Drink');
     const [save, setSave] = useState(true)
+    const [amount, setAmount] = useState(0)
+    const [description, setDescription] = useState('')
+    const [openAddAlert, setOpenAddAlert] = useState(false)
+    const [selectedDate, setSelectedDate] = useState(new Date())
+    const [categories, setCategories] = useState('Food & Drink');
+    const [openAddTransaction, setOpenAddTransaction] = useState(false)
+    const [selectedDateAddtransaction, setSelectedDateAddtransaction] = useState(new Date())
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        const profile = JwtDecode(token)
-
         const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
 
         axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
