@@ -9,8 +9,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import { makeStyles, Divider } from '@material-ui/core'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
-import { useHistory } from 'react-router-dom'
-import _ from 'lodash'
 import JwtDecode from 'jwt-decode'
 
 const useStyles = makeStyles({
@@ -25,7 +23,6 @@ const useStyles = makeStyles({
 })
 
 export default function Profile() {
-    const history = useHistory()
     const classes = useStyles()
     const [open, setOpen] = useState(false)
     const [profile, setProfile] = useState([])
@@ -37,26 +34,17 @@ export default function Profile() {
         setProfile(_profile)
     }, [])
 
-    const handleToggle = () => {
-        setOpen((prevOpen) => !prevOpen);
-    };
+    const handleToggle = () => { setOpen((prevOpen) => !prevOpen) }
 
     const handleClose = (event) => {
-        if (anchorRef.current && anchorRef.current.contains(event.target)) {
-            return;
-        }
-
+        if (anchorRef.current && anchorRef.current.contains(event.target)) return
         setOpen(false);
-    };
-
-    const handleClick = () => {
-        // localStorage.removeItem('token')
-        // history.push('/')
-        window.location.href = '/'
     }
 
+    const handleClick = () => { window.location.href = '/' }
+
     return (
-        <div>
+        <React.Fragment>
             <IconButton
                 color="inherit"
                 ref={anchorRef}
@@ -85,6 +73,6 @@ export default function Profile() {
                     </Grow>
                 )}
             </Popper>
-        </div>
+        </React.Fragment>
     )
 }

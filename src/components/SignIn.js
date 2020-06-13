@@ -3,19 +3,15 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Alert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios'
-import { Route, useHistory } from 'react-router-dom';
-import Layout from './Layout';
+import { useHistory } from 'react-router-dom';
 import { Snackbar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +42,7 @@ export default function SignIn(props) {
     const classes = useStyles()
     const [username, setUsername] = useState()
     const [password, setPassword] = useState()
+    const [isUser, setIsUser] = useState(false)
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
@@ -60,29 +57,15 @@ export default function SignIn(props) {
         axios.get(url)
             .then(res => {
                 localStorage.setItem('token', res.data)
-                history.push('/main')
-                // const isUser = Array.from(res.data).filter(x => x.username == username && x.password == password && x.status == 'A')
-                // isUser.length ? history.push('/main', { userData: isUser })
-                //     : document.getElementById('alertUsernamePassword').classList.remove(classes.hide)
+                res.data ? history.push('/main') :
+                    document.getElementById('alertUsernamePassword').classList.remove(classes.hide)
             })
-            .catch(err => {
-                console.log(err)
-            })
-
-
+            .catch(err => { document.getElementById('alertUsernamePassword').classList.remove(classes.hide) })
     }
 
     const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
+        if (reason === 'clickaway') return
         setOpen(false);
-    };
-
-    const handleChange = (e) => {
-        const targetName = e.target.name
-        targetName === 'username' ? setUsername(e.target.value) : setPassword(e.target.value)
     }
 
     return (
@@ -94,7 +77,7 @@ export default function SignIn(props) {
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign in
-        </Typography>
+                </Typography>
                 <form className={classes.form} onSubmit={handleSubmit} noValidate>
                     <TextField
                         variant="outlined"
@@ -106,7 +89,7 @@ export default function SignIn(props) {
                         name="username"
                         autoComplete="email"
                         autoFocus
-                        onChange={handleChange}
+                        onChange={(e) => { setUsername(e.target.value) }}
                     />
                     <TextField
                         variant="outlined"
@@ -118,7 +101,7 @@ export default function SignIn(props) {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        onChange={handleChange}
+                        onChange={(e) => { setPassword(e.target.value) }}
                     />
                     <Alert severity="error" id='alertUsernamePassword' className={classes.hide}>Username or Password incorrect.</Alert>
                     <Button

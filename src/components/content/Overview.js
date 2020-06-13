@@ -18,14 +18,6 @@ export default function Overview(props) {
     const [label, setLabel] = useState([])
 
     useEffect(() => {
-        // const token = localStorage.getItem('token')
-        // const profile = JwtDecode(token)
-        // const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
-
-        // axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
-        //     .then(res => console.log(res))
-        //     .catch(err => console.log(err))
-
         const date = props.selectedDate.toString().split(' ')[1]
 
         const filterDataByDate = props.data.filter(x => x.month == date)
@@ -64,6 +56,5 @@ export default function Overview(props) {
         <Grid container className={classes.container} >
             <Doughnut data={doughnutData} />
         </Grid>
-
-    );
+    )
 }

@@ -65,13 +65,22 @@ export default function Transaction(props) {
         setData(filterDataByDate)
     }, [props.selectedDate, props.data])
 
-    const handleClose = () => {
+    const getExpenseList = (token, username, action) => {
+        const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${username}`
+
+        axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
+            .then(res => {
+                //change expense date format
+                Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
+                setData(res.data)
+
+                action == 'delete' ? setOpenDeleteAlert(true) : setOpenEditAlert(true)
+            })
+
         setOpen(false)
     }
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    }
+    const handleDateChange = (date) => { setSelectedDate(date) }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -98,19 +107,7 @@ export default function Transaction(props) {
         const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${id}`
 
         axios.put(url, data, { headers: { 'authorization': `bearer ${token}` } })
-            .then(res => {
-                const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
-
-                axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
-                    .then(res => {
-                        //change expense date format
-                        Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
-                        setData(res.data)
-                        setOpenEditAlert(true)
-                    })
-
-                setOpen(false)
-            })
+            .then(res => { getExpenseList(token, profile.username, 'edit') })
             .catch(err => console.log(err))
     }
 
@@ -137,35 +134,17 @@ export default function Transaction(props) {
         const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${id}`
 
         axios.delete(url, { headers: { 'authorization': `bearer ${token}` } })
-            .then(res => {
-                const url = `https://expense-tracker-api-arp.herokuapp.com/api/expense/${profile.username}`
-
-                axios.get(url, { headers: { 'authorization': `bearer ${token}` } })
-                    .then(res => {
-                        //change expense date format
-                        Array.from(res.data).map(x => x.expensedate = moment(x.expensedate).format('DD/MM/yyyy'))
-                        setData(res.data)
-                        setOpenDeleteAlert(true)
-                    })
-
-                setOpen(false)
-            })
+            .then(res => { getExpenseList(token, profile.username, 'delete') })
             .catch(err => console.log(err))
     }
 
     const handleEditAlertClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
+        if (reason === 'clickaway') return
         setOpenEditAlert(false);
     }
 
     const handleDeleteAlertClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
+        if (reason === 'clickaway') return
         setOpenDeleteAlert(false);
     }
 
@@ -190,7 +169,7 @@ export default function Transaction(props) {
             value: 'Other',
             label: 'Other',
         }
-    ];
+    ]
 
     const columns = [
         {
@@ -265,14 +244,14 @@ export default function Transaction(props) {
                 />
             </MuiThemeProvider>
 
-            <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} >
+            <Dialog onClose={() => { setOpen(false) }} aria-labelledby="simple-dialog-title" open={open} >
                 <Grid container>
                     <Grid item xs>
                         <DialogTitle>Edit Transaction</DialogTitle>
                     </Grid>
                     <Grid item>
                         <DialogTitle>
-                            <IconButton size='small' onClick={handleClose}>
+                            <IconButton size='small' onClick={() => { setOpen(false) }}>
                                 <CloseIcon color='secondary' />
                             </IconButton>
                         </DialogTitle>
