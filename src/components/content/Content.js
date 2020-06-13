@@ -96,6 +96,8 @@ export default function Content() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
+        setSave(true)
+
         const token = localStorage.getItem('token')
         const profile = JwtDecode(token)
 
