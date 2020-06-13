@@ -46,28 +46,6 @@ export default function SignUp() {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
 
-    const handleChange = (e) => {
-        const targetName = e.target.name
-
-        switch (targetName) {
-            case 'firstName':
-                setFirstName(e.target.value)
-                break;
-            case 'lastName':
-                setLastName(e.target.value)
-                break;
-            case 'userName':
-                setUserName(e.target.value)
-                break;
-            case 'password':
-                setPassword(e.target.value)
-                break;
-            case 'confirmPassword':
-                setConfirmPassword(e.target.value)
-                break;
-        }
-    }
-
     const handelSubmit = (e) => {
         e.preventDefault()
 
@@ -114,7 +92,7 @@ export default function SignUp() {
                                 label="First Name"
                                 autoFocus
                                 className={classes.err}
-                                onChange={handleChange}
+                                onChange={(e) => { setFirstName(e.target.value) }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -127,7 +105,7 @@ export default function SignUp() {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="lname"
-                                onChange={handleChange}
+                                onChange={(e) => { setLastName(e.target.value) }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -140,7 +118,7 @@ export default function SignUp() {
                                 label="Username"
                                 name="userName"
                                 autoComplete="username"
-                                onChange={handleChange}
+                                onChange={(e) => { setUserName(e.target.value) }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -154,7 +132,7 @@ export default function SignUp() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                onChange={handleChange}
+                                onChange={(e) => { setPassword(e.target.value) }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -168,7 +146,7 @@ export default function SignUp() {
                                 type="password"
                                 id="confirmPassword"
                                 autoComplete="current-password"
-                                onChange={handleChange}
+                                onChange={(e) => { setConfirmPassword(e.target.value) }}
                             />
                         </Grid>
                         <Grid item xs={12} id='alertConfirmPassword' className={classes.hide}>
