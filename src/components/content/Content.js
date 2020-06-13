@@ -152,10 +152,7 @@ export default function Content() {
     }
 
     const handleAddAlertClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
+        if (reason === 'clickaway') return
         setOpenAddAlert(false);
     }
 
@@ -191,14 +188,6 @@ export default function Content() {
         setSelectedDateAddtransaction(moment(date))
     }
 
-    const handleOpenAddTransaction = () => {
-        setOpenAddTransaction(true);
-    }
-
-    const handleCloseAddTransaction = (value) => {
-        setOpenAddTransaction(false)
-    }
-
     return (
         <React.Fragment>
             <Card>
@@ -219,16 +208,7 @@ export default function Content() {
                         </MuiPickersUtilsProvider>
                     }
                     action={
-                        // <IconButton
-                        //     aria-label="add transaction"
-                        //     onClick={handleOpenAddTransaction}
-                        // >
-                        //     <AddCircleIcon
-                        //         color='secondary'
-                        //         fontSize='large'
-                        //     />
-                        // </IconButton>
-                        <Button variant="contained" onClick={handleOpenAddTransaction} startIcon={<AddCircleIcon />} color="secondary" fullWidth={true}>
+                        <Button variant="contained" onClick={() => { setOpenAddTransaction(true) }} startIcon={<AddCircleIcon />} color="secondary" fullWidth={true}>
                             NEW
                         </Button>
                     }
@@ -257,14 +237,14 @@ export default function Content() {
                 </CardContent>
             </Card>
 
-            <Dialog onClose={handleCloseAddTransaction} aria-labelledby="simple-dialog-title" open={openAddTransaction} >
+            <Dialog onClose={() => { setOpenAddTransaction(false) }} aria-labelledby="simple-dialog-title" open={openAddTransaction} >
                 <Grid container>
                     <Grid item xs>
                         <DialogTitle>Add Transaction</DialogTitle>
                     </Grid>
                     <Grid item>
                         <DialogTitle>
-                            <IconButton size='small' onClick={handleCloseAddTransaction}>
+                            <IconButton size='small' onClick={() => { setOpenAddTransaction(false) }}>
                                 <CloseIcon color='secondary' />
                             </IconButton>
                         </DialogTitle>
