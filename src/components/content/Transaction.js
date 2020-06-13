@@ -76,6 +76,8 @@ export default function Transaction(props) {
     const handleSubmit = (e) => {
         e.preventDefault()
 
+        setEdit(true)
+
         const token = localStorage.getItem('token')
         const profile = JwtDecode(token)
 
@@ -247,6 +249,7 @@ export default function Transaction(props) {
             setCategories(event[2])
             setDescription(event[3])
             setAmount(event[4])
+            setEdit(false)
             setOpen(true)
         },
     }
